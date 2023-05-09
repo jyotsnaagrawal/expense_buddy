@@ -26,6 +26,15 @@ class DatabaseSetup:
             group_name TEXT
         )''')
 
+        # Create the "expenses" table if it doesn't exist
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS expenses_owe (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            group_name TEXT,
+            owed_by REAL,
+            owe_to TEXT,
+            amount REAL
+        )''')
+
     # Calling destructor
     def __del__(self):
         self.conn.commit()
@@ -69,8 +78,9 @@ class DatabaseSetup:
 
         self.conn.commit()
 
-    def get_all_expenses(self):
-        self.cursor.execute("SELECT group_name, date, description, amount, paid_by FROM expenses")
+    def get_all_expenses(self, group_name):
+        self.cursor.execute("SELECT group_name, date, description, amount, paid_by FROM expenses where group_name=?",
+                            (group_name,))
         return self.cursor.fetchall()
 
     def rename_group(self, old_group_name, new_group_name):
@@ -92,3 +102,15 @@ class DatabaseSetup:
     def delete_group(self, group_name):
         self.cursor.execute("DELETE FROM groups WHERE name=?", (group_name,))
         self.conn.commit()
+
+    def add_expense_owed(self, group_name, owed_by, owe_to, amount):
+        self.cursor.execute(
+            "INSERT INTO expenses_owe (group_name, owed_by, owe_to, amount) "
+            "VALUES (?, ?, ?, ?)",
+            (group_name, owed_by, owe_to, amount))
+
+        self.conn.commit()
+
+    def get_all_dues(self, group_name):
+        self.cursor.execute("SELECT owed_by, amount, owe_to FROM expenses_owe where group_name=?", (group_name,))
+        return self.cursor.fetchall()
