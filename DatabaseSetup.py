@@ -35,15 +35,12 @@ class DatabaseSetup:
         # Check if the group name already exists in the database
         self.cursor.execute("SELECT name FROM groups WHERE name=?", (group_name,))
         if self.cursor.fetchone():
-            # Show a message saying "Group name already exists"
-            return "Group name already exists"
+            return False
         else:
             # Save the group name in the database
             self.cursor.execute("INSERT INTO groups(name) VALUES(?)", (group_name,))
             self.conn.commit()
-
-            # Show a message saying "Group has been created"
-            return "Group has been created"
+            return True
 
     def get_persons_for_group(self, group_name):
         # Convert group_name to string if necessary
@@ -72,20 +69,25 @@ class DatabaseSetup:
 
         self.conn.commit()
 
+    def get_all_expenses(self):
+        self.cursor.execute("SELECT group_name, date, description, amount, paid_by FROM expenses")
+        return self.cursor.fetchall()
+
     def rename_group(self, old_group_name, new_group_name):
         self.cursor.execute("SELECT name FROM groups WHERE name=?", (new_group_name,))
         group_exists = self.cursor.fetchone()
 
         if group_exists and group_exists != old_group_name:
-            # Show an error message if the group name already exists
-            return "Group name already exists"
+            return False
         else:
             # Update the selected group name in the database
             self.cursor.execute("UPDATE groups SET name=? WHERE name=?", (new_group_name, old_group_name))
             self.conn.commit()
-
-            # Show a message saying "Group name has been updated"
-            return "Group name has been updated"
+            self.cursor.execute("UPDATE persons SET group_name=? WHERE group_name=?", (new_group_name, old_group_name))
+            self.conn.commit()
+            self.cursor.execute("UPDATE expenses SET group_name=? WHERE group_name=?", (new_group_name, old_group_name))
+            self.conn.commit()
+            return True
 
     def delete_group(self, group_name):
         self.cursor.execute("DELETE FROM groups WHERE name=?", (group_name,))

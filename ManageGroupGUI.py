@@ -13,6 +13,7 @@ class ManageGroupGUI(tk.Toplevel):
         super().__init__(master)
         self.selected_group_name = None
         self.persons_listbox = None
+        self.expenses_listbox = None
         self.title("Manage Groups")
         self.groups_listbox = tk.Listbox(self)
         self.groups_listbox.grid(row=0, column=0, padx=10, pady=10, sticky="NSEW")
@@ -53,7 +54,7 @@ class ManageGroupGUI(tk.Toplevel):
                                   border=20, command=self.show_person_list)
         person_button.pack(padx=30, pady=30)
         expenses_button = tk.Button(new_window, text="Expenses", width=40, height=10, background="green", font=20,
-                                    border=20, command=self.show_expenses_window)
+                                    border=20, command=self.show_expense_list)
         expenses_button.pack(padx=30, pady=10)
 
         to_be_paid_button = tk.Button(new_window, text="To Be Paid", width=40, height=10, background="green", font=20,
@@ -72,7 +73,7 @@ class ManageGroupGUI(tk.Toplevel):
         person_name_label.grid(row=0, column=0, padx=10, pady=10)
         person_name_entry = tk.Entry(person_list_window)
         person_name_entry.grid(row=0, column=1, padx=10, pady=10)
-        save_button = tk.Button(person_list_window, text="Save", command=lambda: self.save_person(person_name_entry))
+        save_button = tk.Button(person_list_window, text="Add", command=lambda: self.add_person(person_name_entry))
         save_button.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
 
         # Fetch the existing list of persons for the selected group
@@ -87,21 +88,8 @@ class ManageGroupGUI(tk.Toplevel):
             self.persons_listbox.insert(tk.END, person)
 
         # Create the "Back" button to go back to the previous window
-        back_button = tk.Button(person_list_window, text="Back", command=person_list_window.destroy)
+        back_button = tk.Button(person_list_window, text="Close", command=person_list_window.destroy)
         back_button.grid(row=3, column=1, padx=10, pady=10)
-
-    def save_person(self, person_name_entry):
-        # Get the entered person name from the entry box
-        person_name = person_name_entry.get()
-
-        # Add the person to the database for the selected group
-        db.add_person_to_group(self.selected_group_name, person_name)
-
-        # Clear the entry box
-        person_name_entry.delete(0, tk.END)
-
-        # Update the persons listbox with the newly added person
-        self.persons_listbox.insert(tk.END, person_name)
 
     def add_person(self, person_name_entry):
         # Get the entered person name from the entry box
@@ -115,6 +103,31 @@ class ManageGroupGUI(tk.Toplevel):
 
         # Update the persons listbox with the newly added person
         self.persons_listbox.insert(tk.END, person_name)
+
+    def show_expense_list(self):
+
+        # Create the persons listbox
+        # Create a new Toplevel window for showing the person list
+        expense_list_window = tk.Toplevel(self)
+        expense_list_window.title("Expense List")
+
+        save_button = tk.Button(expense_list_window, text="Add Expense", command=lambda: self.show_expenses_window())
+        save_button.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+
+        # Fetch the existing list of persons for the selected group
+        expenses = db.get_all_expenses()
+
+        # Create a listbox to display the existing persons
+        self.expenses_listbox = tk.Listbox(expense_list_window)
+        self.expenses_listbox.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="NSEW")
+
+        # Add the existing persons to the listbox
+        for expense in expenses:
+            self.expenses_listbox.insert(tk.END, expense)
+
+        # Create the "Back" button to go back to the previous window
+        back_button = tk.Button(expense_list_window, text="Close", command=expense_list_window.destroy)
+        back_button.grid(row=3, column=1, padx=10, pady=10)
 
     def show_expenses_window(self):
         # Create a new Toplevel window for expenses
@@ -217,13 +230,17 @@ class ManageGroupGUI(tk.Toplevel):
                 new_group_name = group_window.group_name_entry.get()
 
                 # Check if the new group name already exists in the database
-                messagebox.showinfo(db.rename_group(self.selected_group_name, new_group_name))
-                # Close the "Modify Group" window
-                group_window.destroy()
+                if db.rename_group(self.selected_group_name, new_group_name):
+                    # Show a message saying "Group name has been updated"
+                    messagebox.showinfo("Success", "Group name has been updated")
+                    # Close the "Modify Group" window
+                    group_window.destroy()
+                else:
+                    messagebox.showerror("Error", "Group name already exists")
 
-                # Clear the selected group name attribute and repopulate the listbox
-                del self.selected_group_name
-                self.populate_listbox()
+                    # Clear the selected group name attribute and repopulate the listbox
+                    del self.selected_group_name
+                    self.populate_listbox()
 
             # Replace the save_group_name method with the save_modified_group_name method
             group_window.save_button.config(command=save_modified_group_name)

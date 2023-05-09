@@ -38,5 +38,10 @@ class GroupWindow(tk.Toplevel):
         # Get the group name entered by the user
         group_name = self.group_name_entry.get()
 
-        messagebox.showinfo(db.create_group(group_name))
-        self.destroy()
+        if db.create_group(group_name):
+            # Show a message saying "Group has been created"
+            messagebox.showinfo("Success", "Group has been created")
+            self.destroy()
+        else:
+            messagebox.showerror("Error", "Group name already exists")
+
