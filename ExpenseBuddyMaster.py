@@ -18,7 +18,7 @@ def main():
     background_image = ImageTk.PhotoImage(image)
 
     # Create a label widget to display the background image
-    background_label = tk.Label(root, image=background_image, background="bLACK")
+    background_label = tk.Label(root, image=background_image, background="black")
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     # Create the "New Group" button
