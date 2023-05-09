@@ -29,7 +29,8 @@ class GUI:
                                          font=60, border=100, background="white")
         manage_groups_button.pack(padx=10, pady=10)
         # Add text on top of the main window
-        text_label = tk.Label(root, text="Welcome to the Expense Buddy Bills Split App", font=("Helvetica", 26), bg="white")
+        text_label = tk.Label(root, text="Welcome to the Expense Buddy Bills Split App", font=("Helvetica", 26),
+                              bg="white")
         text_label.place(relx=0.5, rely=0.1, anchor="center")
 
         # Start the main event loop
