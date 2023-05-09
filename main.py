@@ -352,7 +352,6 @@ class ManageGroupsWindow(tk.Toplevel):
                 del self.selected_group_name
                 self.populate_listbox()
 
-
 # Create a new main window
 
 
