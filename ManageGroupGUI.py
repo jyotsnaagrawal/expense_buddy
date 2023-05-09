@@ -162,7 +162,8 @@ class ManageGroupGUI(tk.Toplevel):
 
         # Create a button to save the expense
         save_button = tk.Button(expenses_window, text="Save",
-                                command=lambda: self.save_expense(date_entry.get(), expense_name_entry.get(),
+                                command=lambda: self.save_expense(expenses_window, date_entry.get(),
+                                                                  expense_name_entry.get(),
                                                                   expense_amount_entry.get(), self.selected_group_name))
 
         save_button.pack(padx=10, pady=10)
@@ -171,7 +172,7 @@ class ManageGroupGUI(tk.Toplevel):
         close_button = tk.Button(expenses_window, text="Close", command=expenses_window.destroy)
         close_button.pack(padx=10, pady=10)
 
-    def save_expense(self, selected_date, expense_name, expense_amount, selected_group_name):
+    def save_expense(self, expenses_window, selected_date, expense_name, expense_amount, selected_group_name):
         # Retrieve the number of persons for the selected group
         persons = db.get_persons_for_group(selected_group_name)
         num_persons = len(persons)
@@ -180,10 +181,9 @@ class ManageGroupGUI(tk.Toplevel):
         if num_persons == 0:
             # Handle the case where there are no persons
             # Display an error message or take appropriate action
+            expenses_window.destroy()
+            messagebox.showerror("Error", "Please add person to the group.")
             return
-
-        # Perform the division
-        split_amount = round(float(expense_amount) / num_persons, 2)
 
         # Create a new Toplevel window for selecting the person who paid
         paid_by_window = tk.Toplevel(self)
@@ -200,22 +200,55 @@ class ManageGroupGUI(tk.Toplevel):
         paid_by_menu = tk.OptionMenu(paid_by_window, selected_person, *persons)
         paid_by_menu.pack(padx=10, pady=10)
 
+        # Get the selected person who paid
+        paid_by = tk.Entry(textvariable=selected_person).get()
+
+        # Create a button to save the expense with the selected person who paid
+        next_button = tk.Button(paid_by_window, text="Next",
+                                command=lambda: self.paid_for_check_boxes(selected_date, expense_name, expense_amount,
+                                                                          selected_group_name, paid_by))
+        next_button.pack(padx=10, pady=10)
+
+    def paid_for_check_boxes(self, selected_date, expense_name, expense_amount, group_name, paid_by):
+        # Retrieve the number of persons for the selected group
+        persons = db.get_persons_for_group(group_name)
+
+        # Create a new Toplevel window for selecting the person who paid
+        paid_for_window = tk.Toplevel(self)
+        paid_for_window.title("Paid for?")
+
+        # Create a label for the person selection
+        paid_for_label = tk.Label(paid_for_window, text="Select the people involved in expense:")
+        paid_for_label.pack(padx=10, pady=10)
+
+        check_button_dict = {}
+        for person in persons:
+            # Create Checkbutton to select the person involved in expense
+            checkbox = tk.Checkbutton(paid_for_window, text=person,
+                                      variable=tk.BooleanVar(),
+                                      onvalue=True,
+                                      offvalue=False,
+                                      height=2,
+                                      width=10)
+            check_button_dict[person] = checkbox
+
+        for checkbox in check_button_dict:
+            check_button_dict[checkbox].pack()
+
         def save_expense_with_paid_by():
-            # Get the selected person who paid
-            paid_by = tk.Entry(textvariable=selected_person).get()
 
             # Save the expense and split amount in the database
-            db.add_expense(selected_group_name, selected_date, expense_name, expense_amount, paid_by)
+            db.add_expense(group_name, selected_date, expense_name, expense_amount, paid_by)
 
             # Show a message indicating that the expense has been saved
             messagebox.showinfo("Success", f"Expense for {selected_date} with name '{expense_name}'"
                                            f" and amount '{expense_amount}' has been saved")
 
             # Close the paid_by_window
-            paid_by_window.destroy()
+            paid_for_window.destroy()
 
         # Create a button to save the expense with the selected person who paid
-        save_button = tk.Button(paid_by_window, text="Save", command=save_expense_with_paid_by)
+        save_button = tk.Button(paid_for_window, text="Save", command=save_expense_with_paid_by)
         save_button.pack(padx=10, pady=10)
 
     def show_dues_list(self):
