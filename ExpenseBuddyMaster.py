@@ -2,11 +2,8 @@ import tkinter as tk
 
 from PIL import Image, ImageTk
 
-from DatabaseSetup import DatabaseSetup
 from ExpenseBuddyGUI import GroupWindow
 from ManageGroupGUI import ManageGroupGUI
-
-db = DatabaseSetup()
 
 
 def main():
