@@ -283,7 +283,6 @@ class ManageGroupsWindow(tk.Toplevel):
                 "VALUES (?, ?, ?, ?, ?)",
                 (selected_group_name, selected_date, expense_name, expense_amount, paid_by))
 
-
             conn.commit()
 
             # Show a message indicating that the expense has been saved
