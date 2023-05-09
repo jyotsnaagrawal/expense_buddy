@@ -223,22 +223,36 @@ class ManageGroupGUI(tk.Toplevel):
 
         check_button_dict = {}
         for person in persons:
+            check_state = tk.BooleanVar()
+
             # Create Checkbutton to select the person involved in expense
             checkbox = tk.Checkbutton(paid_for_window, text=person,
-                                      variable=tk.BooleanVar(),
+                                      variable=check_state,
                                       onvalue=True,
                                       offvalue=False,
                                       height=2,
                                       width=10)
-            check_button_dict[person] = checkbox
+            check_button_dict[person] = [checkbox, check_state]
 
         for checkbox in check_button_dict:
-            check_button_dict[checkbox].pack()
+            check_button_dict[checkbox][0].pack()
 
         def save_expense_with_paid_by():
 
+            person_list = []
+            for person_name in check_button_dict:
+                checkbutton = check_button_dict[person_name][1]
+                if checkbutton.get():
+                    person_list.append(str(person_name))
+
+            # Perform the division
+            split_amount = round(float(expense_amount) / len(person_list), 2)
+
             # Save the expense and split amount in the database
             db.add_expense(group_name, selected_date, expense_name, expense_amount, paid_by)
+
+            for owed_by in person_list:
+                db.add_expense_owed(group_name, owed_by, paid_by, split_amount)
 
             # Show a message indicating that the expense has been saved
             messagebox.showinfo("Success", f"Expense for {selected_date} with name '{expense_name}'"

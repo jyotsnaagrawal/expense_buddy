@@ -30,7 +30,7 @@ class DatabaseSetup:
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS expenses_owe (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             group_name TEXT,
-            owed_by REAL,
+            owed_by TEXT,
             owe_to TEXT,
             amount REAL
         )''')
