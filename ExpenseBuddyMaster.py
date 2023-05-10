@@ -39,4 +39,5 @@ class ExpenseBuddyApp:
         new_group_button.pack(padx=10, pady=100)
 
 
-gui = ExpenseBuddyApp()
+# Start the application.
+ExpenseBuddyApp()
