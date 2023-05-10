@@ -246,7 +246,7 @@ class ManageGroupGUI(tk.Toplevel):
             for person_name in check_button_dict:
                 checkbutton = check_button_dict[person_name][1]
                 if checkbutton.get():
-                    person_list.append(str(person_name))
+                    person_list.append(str(person_name[0]))
 
             # Perform the division
             split_amount = round(float(expense_amount) / len(person_list), 2)
