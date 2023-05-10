@@ -150,11 +150,20 @@ class DatabaseSetup:
 
     def add_expense_owed(self, group_name, owed_by, owe_to, amount):
         try:
-            self.cursor.execute(
-                "INSERT INTO expenses_owe (group_name, owed_by, owe_to, amount) "
-                "VALUES (?, ?, ?, ?)",
-                (group_name, owed_by, owe_to, amount))
-            self.conn.commit()
+            self.cursor.execute("SELECT amount FROM expenses_owe where group_name=? and owed_by=? and owe_to=?",
+                                (group_name, owed_by, owe_to))
+            existing_amount = self.cursor.fetchone()
+            if existing_amount is None:
+                self.cursor.execute(
+                    "INSERT INTO expenses_owe (group_name, owed_by, owe_to, amount) "
+                    "VALUES (?, ?, ?, ?)",
+                    (group_name, owed_by, owe_to, amount))
+                self.conn.commit()
+            else:
+                self.cursor.execute(
+                    "UPDATE expenses_owe SET amount=? where group_name=? and owed_by=? and owe_to=?",
+                                (existing_amount + amount, group_name, owed_by, owe_to))
+                self.conn.commit()
         except sqlite3.Error:
             print(f"Error: Expenses owed by {owed_by} owe to {owe_to} could not be added .")
 

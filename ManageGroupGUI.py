@@ -238,7 +238,6 @@ class ManageGroupGUI(tk.Toplevel):
             check_button_dict[checkbox][0].pack()
 
         def save_expense_with_paid_by():
-
             person_list = []
             for person_name in check_button_dict:
                 checkbutton = check_button_dict[person_name][1]
@@ -280,8 +279,7 @@ class ManageGroupGUI(tk.Toplevel):
         self.dues_listbox.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="NSEW")
 
         # Add the existing persons to the listbox
-        for dues in amount_dues:
-            self.dues_listbox.insert(tk.END, dues)
+        self.dues_listbox.insert(tk.END, *amount_dues)
 
         # Create the "Close" button to close the window
         close_button = tk.Button(dues_list_window, text="Close", command=dues_list_window.destroy)
