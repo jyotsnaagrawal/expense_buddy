@@ -20,14 +20,11 @@ class GUI:
         background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Create the "New Group" button
-        new_group_button = tk.Button(root, text="New Group", command=GroupWindow, padx=70, pady=20, font=60, border=100,
-                                     background="white")
-        new_group_button.pack(padx=10, pady=100)
+        self.create_large_button(root, "New Group", GroupWindow)
 
         # Create the "Manage Groups" button
-        manage_groups_button = tk.Button(root, text="Manage Groups", command=ManageGroupGUI, padx=70, pady=20,
-                                         font=60, border=100, background="white")
-        manage_groups_button.pack(padx=10, pady=10)
+        self.create_large_button(root, "Manage Groups", ManageGroupGUI)
+
         # Add text on top of the main window
         text_label = tk.Label(root, text="Welcome to the Expense Buddy Bills Split App", font=("Helvetica", 26),
                               bg="white")
@@ -35,6 +32,11 @@ class GUI:
 
         # Start the main event loop
         root.mainloop()
+
+    def create_large_button(self, root, name, callback_method):
+        new_group_button = tk.Button(root, text=name, command=callback_method, padx=70, pady=20, font=60, border=80,
+                                     background="white")
+        new_group_button.pack(padx=10, pady=100)
 
 
 gui = GUI()
