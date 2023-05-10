@@ -109,8 +109,8 @@ class DatabaseSetup:
 
     def get_all_expenses(self, group_name):
         try:
-            self.cursor.execute("SELECT group_name, date, description, amount, paid_by FROM expenses where group_name=?",
-                                (group_name,))
+            self.cursor.execute("SELECT group_name, date, description, amount, paid_by "
+                                "FROM expenses where group_name=?", (group_name,))
             return self.cursor.fetchall()
         except sqlite3.Error:
             print("Error: Expense list could not be retrieved.")
@@ -160,9 +160,10 @@ class DatabaseSetup:
                     (group_name, owed_by, owe_to, amount))
                 self.conn.commit()
             else:
+                total_amount = existing_amount[0] + amount
                 self.cursor.execute(
                     "UPDATE expenses_owe SET amount=? where group_name=? and owed_by=? and owe_to=?",
-                                (existing_amount + amount, group_name, owed_by, owe_to))
+                    (total_amount, group_name, owed_by, owe_to))
                 self.conn.commit()
         except sqlite3.Error:
             print(f"Error: Expenses owed by {owed_by} owe to {owe_to} could not be added .")

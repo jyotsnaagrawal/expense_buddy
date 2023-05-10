@@ -203,16 +203,16 @@ class ManageGroupGUI(tk.Toplevel):
         paid_by_menu = tk.OptionMenu(paid_by_window, selected_person, *persons)
         paid_by_menu.pack(padx=10, pady=10)
 
-        # Get the selected person who paid
-        paid_by = tk.Entry(textvariable=selected_person).get()
-
         # Create a button to save the expense with the selected person who paid
         next_button = tk.Button(paid_by_window, text="Next",
                                 command=lambda: self.paid_for_check_boxes(selected_date, expense_name, expense_amount,
-                                                                          selected_group_name, paid_by))
+                                                                          selected_group_name, selected_person))
         next_button.pack(padx=10, pady=10)
 
-    def paid_for_check_boxes(self, selected_date, expense_name, expense_amount, group_name, paid_by):
+    def paid_for_check_boxes(self, selected_date, expense_name, expense_amount, group_name, selected_person):
+        # Get the selected person who paid
+        paid_by = tk.Entry(textvariable=selected_person).get()
+
         # Retrieve the number of persons for the selected group
         persons = db.get_persons_for_group(group_name)
 
