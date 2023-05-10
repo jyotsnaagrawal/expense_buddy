@@ -111,6 +111,7 @@ class ManageGroupGUI(tk.Toplevel):
         # Create a new Toplevel window for showing the person list
         expense_list_window = tk.Toplevel(self)
         expense_list_window.title("Expense List")
+        expense_list_window.geometry("1000x900")
 
         save_button = tk.Button(expense_list_window, text="Add Expense", command=lambda: self.show_expenses_window())
         save_button.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
@@ -134,6 +135,7 @@ class ManageGroupGUI(tk.Toplevel):
         # Create a new Toplevel window for expenses
         expenses_window = tk.Toplevel(self)
         expenses_window.title("Expenses")
+        expenses_window.geometry("1000x900")
 
         # Create a label for date selection
         date_label = tk.Label(expenses_window, text="Select Date:")
@@ -188,6 +190,7 @@ class ManageGroupGUI(tk.Toplevel):
         # Create a new Toplevel window for selecting the person who paid
         paid_by_window = tk.Toplevel(self)
         paid_by_window.title("Who Paid")
+        paid_by_window.geometry("1000x900")
 
         # Create a label for the person selection
         paid_by_label = tk.Label(paid_by_window, text="Who paid for this expense?")
@@ -216,10 +219,11 @@ class ManageGroupGUI(tk.Toplevel):
         # Create a new Toplevel window for selecting the person who paid
         paid_for_window = tk.Toplevel(self)
         paid_for_window.title("Paid for?")
+        paid_for_window.geometry("1000x900")
 
         # Create a label for the person selection
         paid_for_label = tk.Label(paid_for_window, text="Select the people involved in expense:")
-        paid_for_label.pack(padx=10, pady=10)
+        paid_for_label.pack(padx=50, pady=10)
 
         check_button_dict = {}
         for person in persons:
@@ -270,25 +274,27 @@ class ManageGroupGUI(tk.Toplevel):
         # Create a new Toplevel window for showing the person list
         dues_list_window = tk.Toplevel(self)
         dues_list_window.title("Dues List")
+        dues_list_window.geometry("1000x900")
 
         # Fetch the existing list of persons for the selected group
         amount_dues = db.get_all_dues(self.selected_group_name)
 
         # Create a listbox to display the existing persons
         self.dues_listbox = tk.Listbox(dues_list_window)
-        self.dues_listbox.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="NSEW")
+        self.dues_listbox.grid(row=2, column=2, columnspan=2, padx=70, pady=70, sticky="NSEW", ipady= 20, ipadx= 40)
 
         # Add the existing persons to the listbox
         self.dues_listbox.insert(tk.END, *amount_dues)
 
         # Create the "Close" button to close the window
         close_button = tk.Button(dues_list_window, text="Close", command=dues_list_window.destroy)
-        close_button.grid(row=3, column=1, padx=10, pady=10)
+        close_button.grid(row=3, column=2, padx=10, pady=10)
 
     def modify_group_name(self):
         if hasattr(self, "selected_group_name"):
             group_window = GroupWindow(self)
             group_window.title("Modify Group")
+            group_window.geometry("1000x900")
 
             # Set the group name entry to the selected group name
             group_window.group_name_entry.insert(0, self.selected_group_name)
