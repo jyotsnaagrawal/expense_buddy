@@ -6,7 +6,7 @@ from ExpenseBuddyGUI import GroupWindow
 from ManageGroupGUI import ManageGroupGUI
 
 
-class GUI:
+class ExpenseBuddyApp:
     def __init__(self):
         root = tk.Tk()
         root.title("Expense Buddy App")
@@ -39,4 +39,4 @@ class GUI:
         new_group_button.pack(padx=10, pady=100)
 
 
-gui = GUI()
+gui = ExpenseBuddyApp()
