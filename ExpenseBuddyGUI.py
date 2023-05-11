@@ -9,6 +9,7 @@ db = DatabaseSetup()
 
 
 class GroupWindow(tk.Toplevel):
+
     def __init__(self, master=None):
         super().__init__(master)
         self.title("Create New Group")

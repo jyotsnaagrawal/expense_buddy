@@ -15,7 +15,7 @@ class ManageGroupGUI(tk.Toplevel):
         self.persons_listbox = None
         self.expenses_listbox = None
         self.dues_listbox = None
-        self.title("Manage Groups")
+        self.title("Manage Groups (Double click on Group Name)")
         self.groups_listbox = tk.Listbox(self)
         self.groups_listbox.grid(row=0, column=0, padx=10, pady=10, sticky="NSEW")
         self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.groups_listbox.yview)
