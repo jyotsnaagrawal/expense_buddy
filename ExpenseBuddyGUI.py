@@ -6,6 +6,9 @@ from PIL import Image, ImageTk
 from DatabaseSetup import DatabaseSetup
 
 db = DatabaseSetup()
+"""
+In This window i took help of my Husband (Gaurav) in line 41-47
+"""
 
 
 class GroupWindow(tk.Toplevel):

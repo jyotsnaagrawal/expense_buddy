@@ -1,3 +1,9 @@
+"""
+In this window in 46 -47 line I took help from Gaurav (Husband)
+# For DateEntry I installed same as installed for messagebox , I have not go anywhere for that.
+# For using how to use calendar https://tkcalendar.readthedocs.io/en/stable/DateEntry.html I went through this side.
+#
+"""
 import tkinter as tk
 from tkinter import messagebox
 from tkcalendar import DateEntry
