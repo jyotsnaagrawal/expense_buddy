@@ -125,13 +125,16 @@ class ManageGroupGUI(tk.Toplevel):
         # Fetch the existing list of persons for the selected group
         expenses = db.get_all_expenses(self.selected_group_name)
 
+        expense_list = []
+        for expense in expenses:
+            expense_list.append(f"{expense[4]} paid ${expense[3]} on {expense[1]} for {expense[2]}")
+
         # Create a listbox to display the existing persons
         self.expenses_listbox = tk.Listbox(expense_list_window)
         self.expenses_listbox.pack(padx=30, pady=20, ipadx= 60, ipady= 50)
 
         # Add the existing persons to the listbox
-        for expense in expenses:
-            self.expenses_listbox.insert(tk.END, expense)
+        self.expenses_listbox.insert(tk.END, *expense_list)
 
         # Create the "Close" button to close the window
         close_button = tk.Button(expense_list_window, text="Close", command=expense_list_window.destroy, font= 20)
@@ -283,13 +286,16 @@ class ManageGroupGUI(tk.Toplevel):
 
         # Fetch the existing list of persons for the selected group
         amount_dues = db.get_all_dues(self.selected_group_name)
+        dues_list = []
+        for dues in amount_dues:
+            dues_list.append(f"{dues[0]} owes ${dues[1]} to {dues[2]}")
 
         # Create a listbox to display the existing persons
         self.dues_listbox = tk.Listbox(dues_list_window)
         self.dues_listbox.pack(padx=70, pady=70, ipady= 20, ipadx= 40)
 
         # Add the existing persons to the listbox
-        self.dues_listbox.insert(tk.END, *amount_dues)
+        self.dues_listbox.insert(tk.END, *dues_list)
 
         # Create the "Close" button to close the window
         close_button = tk.Button(dues_list_window, text="Close", command=dues_list_window.destroy)

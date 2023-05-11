@@ -141,12 +141,22 @@ class DatabaseSetup:
     def delete_group(self, group_name):
         try:
             self.cursor.execute("DELETE FROM groups WHERE name=?", (group_name,))
-            self.cursor.execute("DELETE FROM persons WHERE name=?", (group_name,))
-            self.cursor.execute("DELETE FROM expenses WHERE name=?", (group_name,))
-            self.cursor.execute("DELETE FROM expenses_owe WHERE name=?", (group_name,))
-            self.conn.commit()
         except sqlite3.Error:
-            print(f"Error: group {group_name} could not be deleted.")
+            print(f"Error: group {group_name} could not be deleted from groups table.")
+        try:
+            self.cursor.execute("DELETE FROM persons WHERE group_name=?", (group_name,))
+        except sqlite3.Error:
+            print(f"Error: group {group_name} could not be deleted from persons table.")
+        try:
+            self.cursor.execute("DELETE FROM expenses WHERE group_name=?", (group_name,))
+        except sqlite3.Error:
+            print(f"Error: group {group_name} could not be deleted from expenses table.")
+        try:
+            self.cursor.execute("DELETE FROM expenses_owe WHERE group_name=?", (group_name,))
+        except sqlite3.Error:
+            print(f"Error: group {group_name} could not be deleted from expenses_owe table.")
+
+        self.conn.commit()
 
     def add_expense_owed(self, group_name, owed_by, owe_to, amount):
         try:
