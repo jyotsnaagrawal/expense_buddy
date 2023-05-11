@@ -21,7 +21,8 @@ class ManageGroupGUI(tk.Toplevel):
         self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.groups_listbox.yview)
         self.scrollbar.grid(row=0, column=1, padx=10, pady=10, sticky="NS")
         self.groups_listbox.config(yscrollcommand=self.scrollbar.set)
-        self.groups_listbox.bind("<Double-Button-1>", self.on_select)
+        self.groups_listbox.bind("<Double-Button-1>", self.on_double_click)
+        self.groups_listbox.bind("<<ListboxSelect>>", self.on_select)
         self.modify_button = tk.Button(self, text="Rename", command=self.modify_group_name)
         self.modify_button.grid(row=1, column=1, padx=10, pady=10)
         self.delete_button = tk.Button(self, text="Delete", command=self.delete_group_name)
@@ -39,10 +40,14 @@ class ManageGroupGUI(tk.Toplevel):
         for group in groups:
             self.groups_listbox.insert(tk.END, group[0])
 
-    def on_select(self, _):
+    def on_double_click(self, _):
         if self.groups_listbox.curselection():
             self.selected_group_name = self.groups_listbox.get(self.groups_listbox.curselection()[0])
             self.create_new_window()
+
+    def on_select(self, _):
+        if self.groups_listbox.curselection():
+            self.selected_group_name = self.groups_listbox.get(self.groups_listbox.curselection()[0])
 
     def create_new_window(self):
         new_window = tk.Toplevel(self)
@@ -51,16 +56,16 @@ class ManageGroupGUI(tk.Toplevel):
         new_window.geometry("1000x900")
 
         # Create three buttons in the new window
-        person_button = tk.Button(new_window, text="Person", width=40, height=10, background="green", font=20,
-                                  border=20, command=self.show_person_list)
-        person_button.pack(padx=30, pady=30)
-        expenses_button = tk.Button(new_window, text="Expenses", width=40, height=10, background="green", font=20,
-                                    border=20, command=self.show_expense_list)
-        expenses_button.pack(padx=30, pady=10)
+        person_button = tk.Button(new_window, text="Person", width=40, height=5, background= "White", font=30,
+                                  border=10, command=self.show_person_list)
+        person_button.pack(padx=30, pady=40)
+        expenses_button = tk.Button(new_window, text="Expenses", width=40, height=5, background="White", font=20,
+                                    border=10, command=self.show_expense_list)
+        expenses_button.pack(padx=50, pady=50)
 
-        to_be_paid_button = tk.Button(new_window, text="To Be Paid", width=40, height=10, background="green", font=20,
-                                      border=20, command=self.show_dues_list)
-        to_be_paid_button.pack(padx=30, pady=10)
+        to_be_paid_button = tk.Button(new_window, text="To Be Paid", width=40, height=5, background="White", font=20,
+                                      border=10, command=self.show_dues_list)
+        to_be_paid_button.pack(padx=50, pady=30)
 
     def show_person_list(self):
 
