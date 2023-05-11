@@ -34,9 +34,9 @@ class ExpenseBuddyApp:
         root.mainloop()
 
     def create_large_button(self, root, name, callback_method):
-        new_group_button = tk.Button(root, text=name, command=callback_method, padx=70, pady=20, font=60, border=80,
+        new_group_button = tk.Button(root, text=name, command=callback_method, padx=70, pady=14, font=60, border=80,
                                      background="white")
-        new_group_button.pack(padx=10, pady=100)
+        new_group_button.pack(padx=60, pady=95)
 
 
 # Start the application.
