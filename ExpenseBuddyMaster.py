@@ -7,7 +7,7 @@ Following Libraries has been used while building this application:-
 
 Tkinter
 PIL/Image
-PIL/ImageTk(Go to file settings and in file setting we have to go my project name and under this two options in
+PIL/ImageTk(https://www.activestate.com/resources/quick-reads/how-to-add-images-in-tkinter/
 File | Settings | Project: expense_buddy | Python Interpreter add + button for searching PIL Tool
 tkcalendar (File | Settings | Project: expense_buddy | Python Interpreter add + button for searching tkcalendar)
 https://www.geeksforgeeks.org/create-a-date-picker-calendar-tkinter/
